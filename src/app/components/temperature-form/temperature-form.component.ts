@@ -14,15 +14,26 @@ export class TemperatureFormComponent implements OnInit {
     targetTemperature: new FormControl(),
   });
   isFormValid = false;
+  showErrorMessage = false;
 
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.temperatureForm = this.formBuilder.group({
       minTemperature: ['', Validators.required],
-      maxTemperature: ['', [Validators.required,]],
+      maxTemperature: ['', [Validators.required, this.checkValidMaxTemperature.bind(this)]],
       targetTemperature: ['', [Validators.required, this.checkValidTargetTemperature.bind(this)]]
     });
+  }
+
+  checkValidMaxTemperature(control: AbstractControl): ValidationErrors | null {
+    const minTemperature = +this.temperatureForm?.controls['minTemperature']?.value;
+    const maxTemperature = control.value;
+
+    if (maxTemperature && minTemperature  && (maxTemperature < minTemperature )) {
+      return { 'invalidMaxTemperature': true };
+    }
+    return null;
   }
 
   checkValidTargetTemperature(control: AbstractControl): ValidationErrors | null {
@@ -39,6 +50,9 @@ export class TemperatureFormComponent implements OnInit {
   onSubmit(): void {
     if (this.temperatureForm.valid) {
       this.isFormValid = true;
+      this.showErrorMessage = false;
+    } else {
+      this.showErrorMessage = true;
     }
   }
 

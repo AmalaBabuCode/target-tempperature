@@ -40,12 +40,16 @@
                 formControlName="maxTemperature" 
                 required
             >
-            <div *ngIf="temperatureForm.controls['maxTemperature'].errors">
+            <div 
+                *ngIf="temperatureForm.controls['maxTemperature'].errors"
+                class="text-danger">
                 <div 
-                    *ngIf="temperatureForm.controls['maxTemperature'].hasError('required')" 
-                    class="text-danger"
+                    *ngIf="temperatureForm.controls['maxTemperature'].hasError('required')"
                 >
                     Maximum Temperature is required
+                </div>
+                <div *ngIf="temperatureForm.controls['maxTemperature'].hasError('invalidMaxTemperature')">
+                    Maximum temperature cannot be less than minimum temperature
                 </div>
             </div>
         </div>
@@ -76,6 +80,12 @@
             </div>  
         </div>
     
+        <div 
+            class="text-danger" 
+            *ngIf="showErrorMessage"
+        >
+            Please enter correct values
+        </div>
         <button 
             type="submit" 
             class="btn btn-primary" 
